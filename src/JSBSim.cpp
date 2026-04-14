@@ -390,6 +390,7 @@ int real_main(int argc, char* argv[])
 
   // *** SET UP JSBSIM *** //
   FDMExec = new JSBSim::FGFDMExec();
+  FDMExec->SetDebugLevel(1);
   FDMExec->SetRootDir(RootDir);
   FDMExec->SetAircraftPath(SGPath("aircraft"));
   FDMExec->SetEnginePath(SGPath("engine"));

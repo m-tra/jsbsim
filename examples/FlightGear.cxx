@@ -853,6 +853,23 @@ bool FGJSBsim::copy_from_JSBsim()
         node->setDoubleValue("rpm", eng->getRPM());
         } // end FGPiston code block
         break;
+      case FGEngine::etPistonDiesel:
+        {
+        FGPistonDiesel* eng = (FGPistonDiesel*)Propulsion->GetEngine(i);
+        node->setDoubleValue("egt-degf", eng->getExhaustGasTemp_degF());
+        node->setDoubleValue("oil-temperature-degf", eng->getOilTemp_degF());
+        node->setDoubleValue("oil-pressure-psi", eng->getOilPressure_psi());
+        node->setDoubleValue("mp-osi", eng->getMAP_inHg());
+        node->setDoubleValue("mp-inhg", eng->getMAP_inHg());
+        node->setDoubleValue("cht-degf", eng->getCylinderHeadTemp_degF());
+        node->setDoubleValue("rpm", eng->getRPM());
+        node->setDoubleValue("coolant-temperature-degf", eng->getCoolantTemp_degF());
+        node->setDoubleValue("fuel-rack", eng->getFuelRack());
+        node->setDoubleValue("afr", eng->getAFR());
+        node->setDoubleValue("glow-plug-on", eng->getGlowPlugOn());
+        node->setDoubleValue("boost-pa", eng->getBoostPa());
+        } // end FGPistonDiesel code block
+        break; // end FGPistonDiesel code block
       case FGEngine::etRocket:
         { // FGRocket code block
 //        FGRocket* eng = (FGRocket*)Propulsion->GetEngine(i);
