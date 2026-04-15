@@ -445,7 +445,6 @@ FGPistonDiesel::FGPistonDiesel(FGFDMExec* exec, Element* el, int engine_number, 
   // via GetFuelFlowRate(). Binding it again here causes a double-tie error.
   bind("/bsfc",                         &BSFC_best);
   bind("/map-pa",                       &MAP);
-  bind("/coolant-temperature-degK",     &CoolantTemperature_degK);
   bind("/glow-plug-on",                 &GlowPlugOn);
   bind("/combustion-efficiency",        &combustion_efficiency);
   bind("/m-dot-air-kgs",                &m_dot_air);
@@ -455,11 +454,12 @@ FGPistonDiesel::FGPistonDiesel(FGFDMExec* exec, Element* el, int engine_number, 
   bind("/indicated-hp",                 &IndicatedHorsePower);
   bind("/torque-si",                    &Torque_SI);
 
-  bind_method("/cht-degF",              &FGPistonDiesel::getCylinderHeadTemp_degF);
-  bind_method("/oil-temperature-degF",  &FGPistonDiesel::getOilTemp_degF);
-  bind_method("/oil-pressure-psi",      &FGPistonDiesel::getOilPressure_psi);
-  bind_method("/egt-degF",              &FGPistonDiesel::getExhaustGasTemp_degF);
-  bind_method("/AFR",                   &FGPistonDiesel::getAFR);
+  bind_method("/coolant-temperature-degF", &FGPistonDiesel::getCoolantTemperature_degF);
+  bind_method("/cht-degF",                 &FGPistonDiesel::getCylinderHeadTemp_degF);
+  bind_method("/oil-temperature-degF",     &FGPistonDiesel::getOilTemp_degF);
+  bind_method("/oil-pressure-psi",         &FGPistonDiesel::getOilPressure_psi);
+  bind_method("/egt-degF",                 &FGPistonDiesel::getExhaustGasTemp_degF);
+  bind_method("/AFR",                      &FGPistonDiesel::getAFR);
 
   if (Boosted) {
     bind("/boost-pa", &CurrentBoost_Pa);
@@ -836,9 +836,9 @@ void FGPistonDiesel::doFuelRack()
 
   // === COMBINE ===
   double rack_raw = rack_governor;
-  rack_raw = std::max(rack_raw, idle_rack);       // idle governor floor
   rack_raw = std::min(rack_raw, lever_max_rack);  // driver demand ceiling
   rack_raw = std::min(rack_raw, max_rpm_rack);    // overspeed protection
+  rack_raw = std::max(rack_raw, idle_rack);       // idle governor floor - ALWAYS LAST
 
   double injections_per_sec = (RPM / 60.0) * Cylinders / (Cycles / 2.0);
 
@@ -895,6 +895,7 @@ void FGPistonDiesel::doFuelRack()
   // === FUEL FLOW RATE ===
   m_dot_fuel = m_fuel_per_cycle * injections_per_sec;  // kg/s
   FuelFlow_pps = m_dot_fuel * kgtolb;                  // lb/s
+  FuelFlow_gph = m_dot_fuel * 3600.0 / 1000.0;         // g/h
   FuelFlowRate = FuelFlow_pps;                         // for CalcFuelNeed
 
   // === STARVED CHECK ===

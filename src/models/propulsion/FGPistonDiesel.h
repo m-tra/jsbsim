@@ -264,6 +264,11 @@ public:
   double getCoolantTemperature_degF() const { return KelvinToFahrenheit(CoolantTemperature_degK); }
   double getBoostPa() const { return CurrentBoost_Pa; }
   double getFuelRack() const { return FuelRack; }
+  double getHP() const { return HP; }
+  double getTorque_SI() const { return Torque_SI; }
+  double getVolumetricEfficiencyReduced() const { return volumetric_efficiency_reduced; }
+  double getCombustionEfficiency() const { return combustion_efficiency; }
+  double getIndicatedHorsePower() const { return IndicatedHorsePower; }
 
   bool getGlowPlugOn() const { return GlowPlugOn; }
 
